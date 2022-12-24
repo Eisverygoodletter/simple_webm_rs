@@ -1,0 +1,15 @@
+[package]
+name = "simple-webm"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+libvpx-native-sys = "5.0.8"
+webm = "1"
+image = { version = "0.24.5", optional = true }
+
+[features]
+default = ["image_loading"]
+image_loading = ["dep:image"]

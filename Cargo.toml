@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 libvpx-native-sys = "5.0.8"
+libyuv = "0.1"
 webm = "1"
 image = { version = "0.24.5", optional = true }
 

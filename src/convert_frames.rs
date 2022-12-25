@@ -1,4 +1,6 @@
 use crate::{WebmFrame, WebmFrameType};
+use libyuv;
+use std::ffi::c_int;
 fn yuv_clamp(x: i32) -> u8 {
     x.min(255).max(0) as u8
 }
@@ -17,13 +19,29 @@ impl WebmFrame {
     pub fn to_rgba(&mut self) {
         match self.frame_type {
             WebmFrameType::ARGB => {
-                self.argb_to_rgba();
+                //self.argb_to_rgba();
+                let mut target = vec![0; self.buffer.len()];
+                unsafe {
+                    // argb -> bgra | rgba -> abgr
+                    let _a = libyuv::rgba_to_argb(
+                        self.buffer.as_mut_ptr(),
+                        self.width as c_int * 4,
+                        target.as_mut_ptr(),
+                        self.width as c_int * 4,
+                        self.width as c_int,
+                        self.height as c_int,
+                    );
+                }
+                self.buffer.copy_from_slice(&target);
             }
             WebmFrameType::I420 => {
                 unimplemented!("I420 to rgba not implemented");
             }
-            WebmFrameType::RGBA => {}
+            WebmFrameType::RGBA => {
+                println!("no?");
+            }
         }
+        self.frame_type = WebmFrameType::RGBA;
     }
     pub fn rgba_to_argb(&mut self) {
         if self.frame_type != WebmFrameType::RGBA {

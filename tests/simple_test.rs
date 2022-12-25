@@ -1,12 +1,8 @@
-use simple_webm::{add, WebmFrame};
-use simple_webm::image_loading;
-use simple_webm::convert_frames;
-
-use image::{RgbaImage, Rgba};
 #[cfg(test)]
 mod tests {
     use image::ImageBuffer;
-    use simple_webm::WebmFrameType;
+    use image::{Rgba, RgbaImage};
+    use simple_webm::{WebmFrame, WebmFrameType};
 
     use super::*;
 
@@ -23,16 +19,22 @@ mod tests {
 
     #[test]
     fn rgba_argb_conversion() {
-        let mut test_img = get_test_img();
+        std::fs::create_dir("tests/output/");
+        let test_img = get_test_img();
         let mut frame = WebmFrame::from_image_buffer_rgba(test_img);
         assert_eq!(frame.width, 32);
         assert_eq!(frame.height, 32);
         assert_eq!(frame.frame_type, WebmFrameType::RGBA);
-        let original = frame.clone();
+        let mut original = frame.clone();
+        original
+            .save_as_file("tests/output/rgba_argb_conversion_original.png")
+            .unwrap();
         frame.to_argb();
         assert_eq!(frame.frame_type, WebmFrameType::ARGB);
-        frame.argb_to_rgba();
-        assert_eq!(frame, original);
-        
+        //frame.to_rgba();
+        frame
+            .save_as_file("tests/output/rgba_argb_conversion_modified.png")
+            .unwrap();
+        assert_eq!(original, frame);
     }
 }

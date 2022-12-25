@@ -7,10 +7,11 @@ edition = "2021"
 
 [dependencies]
 libvpx-native-sys = "5.0.8"
-libyuv = "0.1"
+libyuv = { version = "0.1", optional = true }
 webm = "1"
 image = { version = "0.24.5", optional = true }
 
 [features]
-default = ["image_loading"]
+default = ["image_loading", "libyuv_conversion"]
 image_loading = ["dep:image"]
+libyuv_conversion = ["dep:libyuv"]
